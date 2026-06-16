@@ -17,6 +17,15 @@ platform :ios do
       force:          true
     )
 
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "ios/YogaSupport.xcodeproj",
+      team_id:               "G7LJ79QYX8",
+      bundle_identifier:     "org.yogasupport.booking",
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          ENV["SIGH_NAME"]
+    )
+
     gym(
       workspace:            "ios/YogaSupport.xcworkspace",
       scheme:               "YogaSupport",
@@ -24,7 +33,13 @@ platform :ios do
       output_directory:     "./build",
       output_name:          "YogaSupport.ipa",
       clean:                true,
-      xcodebuild_formatter: ""
+      xcodebuild_formatter: "",
+      xcargs:               "DEVELOPMENT_TEAM=G7LJ79QYX8 -allowProvisioningUpdates",
+      export_options: {
+        provisioningProfiles: {
+          "org.yogasupport.booking" => ENV["SIGH_NAME"]
+        }
+      }
     )
 
     upload_to_app_store(
