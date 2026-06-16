@@ -34,7 +34,7 @@ platform :ios do
       output_name:          "YogaSupport.ipa",
       clean:                true,
       xcodebuild_formatter: "",
-      xcargs:               "DEVELOPMENT_TEAM=G7LJ79QYX8 -allowProvisioningUpdates",
+      xcargs:               "DEVELOPMENT_TEAM=G7LJ79QYX8 ENABLE_USER_SCRIPT_SANDBOXING=NO -allowProvisioningUpdates",
       export_options: {
         provisioningProfiles: {
           "org.yogasupport.booking" => ENV["SIGH_NAME"]
