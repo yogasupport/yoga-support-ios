@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Yoga Support",
+    "slug": "yoga-support-booking",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#F6F8F3"
+    },
+    "ios": {
+      "bundleIdentifier": "org.yogasupport.booking",
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        }
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ecd4655a-104f-4cf6-b3e6-fbf78d531944"
+      }
+    },
+    "owner": "yogasupport"
+  }
+}
