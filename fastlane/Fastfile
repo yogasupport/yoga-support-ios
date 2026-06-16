@@ -17,12 +17,9 @@ platform :ios do
       force:          true
     )
 
-    workspace = Dir.glob("ios/*.xcworkspace").first
-    scheme    = File.basename(workspace, ".xcworkspace")
-
     gym(
-      workspace:        workspace,
-      scheme:           scheme,
+      workspace:        "ios/YogaSupport.xcworkspace",
+      scheme:           "Yoga Support",
       export_method:    "app-store",
       output_directory: "./build",
       output_name:      "YogaSupport.ipa",
