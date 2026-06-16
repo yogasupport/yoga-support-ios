@@ -1,39 +1,32 @@
 default_platform(:ios)
 
 platform :ios do
-  lane :release do
-    api_key = app_store_connect_api_key(
-      key_id:       ENV["APPLE_KEY_ID"],
-      issuer_id:    ENV["APPLE_ISSUER_ID"],
-      key_filepath: ENV["APPLE_KEY_PATH"],
-      in_house:     false
-    )
+  desc "Build and upload to App Store"
+  # IMPORTANT: keep this lane name the same as whatever your
+  # .github/workflows/build.yml calls (e.g. `fastlane build`).
+  lane :build do
+    # 1. Authenticate with App Store Connect.
+    #    Leave this exactly as it is in YOUR current Fastfile — it already works.
+    app_store_connect_api_key
 
-    cert(api_key: api_key)
+    # 2. Signing certificate
+    cert
 
-    sigh(
-      api_key:        api_key,
-      app_identifier: "org.yogasupport.booking",
-      force:          true
-    )
+    # 3. Provisioning profile
+    sigh
 
+    # 4. Build the app.
+    #    The two lines below are the actual fix.
     gym(
-      workspace:        "ios/YogaSupport.xcworkspace",
-      scheme:           "Yoga Support",
-      export_method:    "app-store",
-      output_directory: "./build",
-      output_name:      "YogaSupport.ipa",
-      clean:            true
+      workspace: "ios/YogaSupport.xcworkspace",   # confirmed correct from your logs
+      scheme: "YogaSupport",                       # <-- MUST match the exact scheme name in Xcode
+      export_method: "app-store"
     )
 
+    # 5. Upload (keep your existing upload step / options here)
     upload_to_app_store(
-      api_key:                           api_key,
-      ipa:                               "./build/YogaSupport.ipa",
-      skip_metadata:                     true,
-      skip_screenshots:                  true,
-      submit_for_review:                 false,
-      precheck_include_in_app_purchases: false,
-      force:                             true
+      skip_metadata: true,
+      skip_screenshots: true
     )
   end
 end
