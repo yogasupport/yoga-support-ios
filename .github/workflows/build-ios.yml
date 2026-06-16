@@ -1,29 +1,45 @@
-name: Build iOS app
+name: Build and upload iOS app
 on:
   workflow_dispatch:
-    inputs:
-      submit:
-        description: "Submit to App Store after building? (yes/no)"
-        default: "no"
-        required: true
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+
       - name: Install dependencies
         run: npm install
-      - name: Build for iOS
-        run: eas build --platform ios --profile production --non-interactive
+
+      - name: Install Expo CLI
+        run: npm install -g @expo/cli
+
+      - name: Write Apple API Key
+        run: |
+          mkdir -p ~/.private_keys
+          printf '%s' "$APPLE_P8" > ~/.private_keys/AuthKey_${KEY_ID}.p8
+        env:
+          APPLE_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+
+      - name: Generate Xcode project
+        run: npx expo prebuild --platform ios --clean --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-      - name: Submit to App Store
-        if: ${{ github.event.inputs.submit == 'yes' }}
-        run: eas submit --platform ios --latest --non-interactive
+
+      - name: Install CocoaPods
+        run: cd ios && pod install
+
+      - name: Install Fastlane
+        run: gem install fastlane --no-document
+
+      - name: Build and upload to App Store
+        run: fastlane ios release
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          APPLE_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_KEY_PATH: ~/.private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
