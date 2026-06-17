@@ -6,6 +6,7 @@
       "ios": {
         "buildConfiguration": "Release",
         "credentialsSource": "remote"
+        "image": "latest"
       }
     }
   },
