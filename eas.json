@@ -5,7 +5,7 @@
       "autoIncrement": true,
       "ios": {
         "buildConfiguration": "Release",
-        "credentialsSource": "remote"
+        "credentialsSource": "remote",
         "image": "latest"
       }
     }
